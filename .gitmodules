@@ -1,0 +1,6 @@
+[submodule "quick-fix-back"]
+	path = quick-fix-back
+	url = https://github.com/jizambrana5/quick-fix-back.git
+[submodule "quick-fix-front"]
+	path = quick-fix-front
+	url = https://github.com/jizambrana5/quick-fix-front.git
