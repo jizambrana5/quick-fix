@@ -11,10 +11,10 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]  # Comprueba que pg_isready pueda conectarse a PostgreSQL
-      interval: 10s  # Intervalo entre chequeos
-      timeout: 5s   # Tiempo de espera para cada chequeo
-      retries: 3    # Número de intentos antes de declarar el healthcheck como fallido
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
     networks:
       - backend-network
 
@@ -22,10 +22,10 @@ services:
     build:
       context: ./quick-fix-back
       dockerfile: Dockerfile
-    container_name: quick-fix-back-api
+    container_name: quick-fix-back
     depends_on:
       postgres:
-        condition: service_healthy  # Espera hasta que el servicio postgres esté saludable
+        condition: service_healthy
     ports:
       - "8080:8080"
     environment:
@@ -34,7 +34,6 @@ services:
       DB_PASSWORD: admin1234
       DB_NAME: postgres
       DB_PORT: 5432
-      # GIN_MODE: release
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/ping || exit 1"]
       interval: 10s
@@ -42,8 +41,6 @@ services:
       retries: 3
     networks:
       - backend-network
-    volumes:
-      - ./quick-fix-back/pkg/utils/mendoza_locations.json:/app/pkg/utils/mendoza_locations.json
 
   svelte-app:
     build:
@@ -51,9 +48,9 @@ services:
       dockerfile: Dockerfile
     container_name: quick-fix-front
     ports:
-      - "3000:3000"
+      - "3000:80"
     environment:
-      VITE_API_BASE_URL: http://api:8080
+      VITE_API_BASE_URL: http://quick-fix-back:8080
     depends_on:
       - api
     networks:
